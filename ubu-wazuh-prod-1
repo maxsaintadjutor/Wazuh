@@ -15,9 +15,11 @@ apt update && apt full-upgrade -y
 
 # Installation Wazuh
 
+# Configuration initiale
 curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh
 curl -sO https://packages.wazuh.com/4.7/config.yml
 
+# Modification du fichier config.yml et remplacement des noms de nœuds et des valeurs IP par les noms et adresses IP correspondants, dans mon cas (nom : ubu-wazuh-prod-1) & (ip : 192.168.1.184)
 
 echo '
 nodes:
@@ -36,15 +38,20 @@ nodes:
       ip: "192.168.1.184"
 '> config.yml 
 
-
+# Génération de la clé de cluster Wazuh, des certificats et des mots de passe nécessaires à l'installation
 bash wazuh-install.sh --generate-config-files
 
+# Installation et configuration de l'indexeur Wazuh
 bash wazuh-install.sh --wazuh-indexer ubu-wazuh-prod-1
 
+# Démarrer le cluster
 bash wazuh-install.sh --start-cluster
 
+# Pour obtenir le mot de passe administrateur
 tar -axf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt -O | grep -P "\'admin\'" -A 1
 
+# Installation et configuration du server Wazuh
 bash wazuh-install.sh --wazuh-server ubu-wazuh-prod-1
 
+# Installation et configuration du tableau de bord Wazuh
 bash wazuh-install.sh --wazuh-dashboard ubu-wazuh-prod-1
