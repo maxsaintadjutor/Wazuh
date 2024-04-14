@@ -1,0 +1,50 @@
+Installation sous Ubuntu server 22.04.4
+
+------------------------------
+
+iface ens192 inet static
+        subnet  192.168.1.0/24
+        address 192.168.1.184
+        netmask 255.255.255.0
+        gateway 192.168.1.254
+
+------------------------------
+
+# Mise à jour système
+apt update && apt full-upgrade -y
+
+# Installation Wazuh
+
+curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh
+curl -sO https://packages.wazuh.com/4.7/config.yml
+
+
+echo '
+nodes:
+  # Wazuh indexer nodes
+  indexer:
+    - name: ubu-wazuh-prod-1
+      ip: "192.168.1.184"
+
+  server:
+    - name: ubu-wazuh-prod-1
+      ip: "192.168.1.184"
+
+  # Wazuh dashboard nodes
+  dashboard:
+    - name: ubu-wazuh-prod-1
+      ip: "192.168.1.184"
+'> config.yml 
+
+
+bash wazuh-install.sh --generate-config-files
+
+bash wazuh-install.sh --wazuh-indexer ubu-wazuh-prod-1
+
+bash wazuh-install.sh --start-cluster
+
+tar -axf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt -O | grep -P "\'admin\'" -A 1
+
+bash wazuh-install.sh --wazuh-server ubu-wazuh-prod-1
+
+bash wazuh-install.sh --wazuh-dashboard ubu-wazuh-prod-1
