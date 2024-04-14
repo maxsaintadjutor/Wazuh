@@ -1,0 +1,19 @@
+(Mémo : Problème connexion internet causé par la configuration automatique de l'ipv6)
+
+nano /etc/network/interfaces
+----------------------------------------
+
+# This is an autoconfigured IPv6 interface
+#iface ens192 inet6 auto
+
+----------------------------------------
+
+# Deployement d'un agent Wazuh (configuration par défault pour mon serveur)
+
+wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.7.3-1_amd64.deb && WAZUH_MANAGER='192.168.1.184' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent_4.7.3-1_amd64.deb
+
+# Active et démarre l'agent Wazuh
+
+systemctl daemon-reload
+systemctl enable wazuh-agent
+systemctl start wazuh-agent
