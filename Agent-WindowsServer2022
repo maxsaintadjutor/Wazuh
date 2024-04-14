@@ -1,0 +1,9 @@
+# Ouvrir Powershell en administrateur
+
+# Deployement d'un agent Wazuh sur Windows Server 2022 (configuration par défault pour mon serveur)
+
+Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.7.3-1.msi -OutFile ${env.tmp}\wazuh-agent; msiexec.exe /i ${env.tmp}\wazuh-agent /q WAZUH_MANAGER='192.168.1.184' WAZUH_AGENT_GROUP='default' WAZUH_REGISTRATION_SERVER='192.168.1.184' 
+
+# Démarre l'agent Wazuh
+
+NET START WazuhSvc
